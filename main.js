@@ -11,9 +11,14 @@
 $(document).ready(init);
 
 function init(){
+  $('.showNight').on('click', showNight);
+  $('.hideNight').on('click', hideNight);
+  $('.showCam').on('click', showCamera);
+  $('.hideCam').on('click', hideCam);
+
   getWeather();
   getForcast();
-  $('.showNight').click(showNight);
+  
 }
 
 function getWeather(event){
@@ -31,9 +36,9 @@ function getWeather(event){
      var $span = $('<span>').addClass('items');
      var $img = $('<img>').attr('src', url).addClass("wImage");
      var $city = $('<div>').text(city).addClass("city").append($img);
-     var $weather = $('<span>').text(weather).addClass("weather");
-     var $temp = $('<span>').text(temp).addClass("temp");
-     var $feelsLike = $('<span>').text(`Feels like: ${feelsLike}`).addClass("feelsLike");
+     var $weather = $('<span>').text(`${weather},`).addClass("weather");
+     var $temp = $('<span>').text(` ${temp}`).addClass("temp");
+     var $feelsLike = $('<span>').text(`, Feels like: ${feelsLike}`).addClass("feelsLike");
      $span.append($city, $weather, $temp, $feelsLike);
      $('.currentWeather').append($span);
    })
@@ -51,9 +56,9 @@ function getForcast(event){
     
     var $days = data.forecast.txt_forecast.forecastday.map(day =>{
         var $day = $('<span>').addClass(`days`);
-        console.log("url: ", day.icon_url);
-        console.log(" - : ", day.fcttext_metric);
-        console.log("day: ", day.title);
+        //console.log("url: ", day.icon_url);
+        //console.log(" - : ", day.fcttext_metric);
+        //console.log("day: ", day.title);
         var $img = $('<img>').attr('src', day.icon_url).addClass("fImage");
         var $about = $('<div>').text(day.fcttext_metric).addClass("about");
         var $title = $('<div>').text(day.title).addClass("dayTitle");
@@ -75,6 +80,87 @@ function getForcast(event){
 }
 
 function showNight(){
-  console.log("clicked");
+  //console.log("clicked");
   $('.Night').show();
+  $('.Night').css('display', 'inline-block');
+  $('.days').css('width', '9%');
+  $('.btnCont').hide();
+  $('.btnCont2').show();
 }
+
+function hideNight(){
+  //console.log("clicked");
+  $('.Night').hide();
+  //$('.Night').css('display', 'inline-block');
+  $('.btnCont').show();
+  $('.btnCont2').hide();
+}
+
+function showCamera(){
+  $('.loading').show();
+  if(navigator.geolocation){
+     // timeout at 60000 milliseconds (60 seconds)
+    var options = {timeout:60000};
+    navigator.geolocation.getCurrentPosition(function(position){
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    //console.log("Latitude : " + latitude + " Longitude: " + longitude);
+ 
+    //find closest cam and display
+    $.getJSON('http://api.wunderground.com/api/dce5324afa466aeb/webcams/q/autoip.json')
+    .done(function(camData) {
+      var shortest = -1;
+      var index = 0;
+      //console.log("data; ", camData.webcams[0].lat);//, data.lat, " , " , data.lon);
+      //var leng = camData.webcams.length;
+      for(let i =0; i<camData.webcams.length; i++){
+        var lat2 = camData.webcams[i].lat;
+        var lon2 = camData.webcams[i].lon;
+        var x = Math.abs(lon2-longitude) //* Math.cos((latitude+lat2)/2);
+        //console.log("x: ", x);
+        var y = Math.abs(lat2-latitude);
+        //console.log("y: ", y);
+        var d = Math.sqrt(x*x + y*y);
+        console.log("d: ", d);
+        if(shortest === -1){
+          shortest = d;
+          index = i;
+        }
+        else if(d<shortest){
+          shortest = d;
+          index = i;
+        }
+      }
+      //console.log("distance: ", shortest, "index ", index );
+      var url = camData.webcams[index].CURRENTIMAGEURL;
+      //console.log(url);
+      var $img = $('<img>').attr('src', url).addClass("camImage");
+      $('.closestCam').empty().append($img).show();
+      $('.loading').hide();
+      $('.hideWebCam').show();
+      $('.webCam').hide();
+      });
+    });
+  }          
+  else{
+    alert("Sorry, browser does not support geolocation!");
+  }
+
+}
+
+function hideCam(){
+    $('.hideWebCam').hide();
+    $('.webCam').show();
+    $('.closestCam').hide();
+}
+
+
+
+
+
+
+
+
+
+
+
