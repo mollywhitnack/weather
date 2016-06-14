@@ -37,8 +37,8 @@ function getWeather(event){
      var $img = $('<img>').attr('src', url).addClass("wImage");
      var $city = $('<div>').text(city).addClass("city").append($img);
      var $weather = $('<span>').text(`${weather},`).addClass("weather");
-     var $temp = $('<span>').text(` ${temp}`).addClass("temp");
-     var $feelsLike = $('<span>').text(`, Feels like: ${feelsLike}`).addClass("feelsLike");
+     var $temp = $('<span>').text(` ${temp}F`).addClass("temp");
+     var $feelsLike = $('<span>').text(`, Feels like: ${feelsLike}F`).addClass("feelsLike");
      $span.append($city, $weather, $temp, $feelsLike);
      $('.currentWeather').append($span);
    })
@@ -94,6 +94,9 @@ function hideNight(){
   //$('.Night').css('display', 'inline-block');
   $('.btnCont').show();
   $('.btnCont2').hide();
+  $('.days').css("padding-left", "2%");
+  $('.days').css("padding-right", "2%");
+  $('.days').css('width', '12%');
 }
 
 function showCamera(){
