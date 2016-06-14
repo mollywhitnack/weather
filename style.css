@@ -1,0 +1,46 @@
+.currentWeather{
+  text-align: center;
+  margin-top: 10%;
+  margin-bottom: 5%;
+}
+
+.forecast{
+  text-align: center;
+
+}
+.city{
+  font-size:200%;
+ }
+ .wImage{
+  margin-left: 1%;
+
+ }
+.weather, .temp, .feelsLike{
+  margin-left: 0%;
+  margin-right: 1%;
+}
+
+.days{
+  width: 12%;
+  display: inline-block;
+  vertical-align: top;
+  text-align:center;
+}
+
+.dayTitle{
+  font-size:120%;
+
+}
+
+.about{
+  font-size:60%;
+}
+.forcastTitle{
+  text-align: center;
+  font-size:160%;
+  margin-bottom: 2%;
+}
+
+.Night{
+  display: none;
+}
